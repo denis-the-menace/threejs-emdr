@@ -25,7 +25,6 @@ function init() {
   );
   camera.position.z = 6;
 
-  // Create renderer
   renderer = new THREE.WebGLRenderer({ canvas: document.getElementById("bg") });
   renderer.setSize(window.innerWidth, window.innerHeight);
 
@@ -75,9 +74,10 @@ function init() {
   ]);
   scene.environment = envMap;
 
-  document.querySelectorAll("#menu button[data-color]").forEach((button) => {
-    button.addEventListener("click", changeColor);
-  });
+  const colorSelect = document.getElementById("colorSelect");
+  if (colorSelect) {
+    colorSelect.addEventListener("change", changeColorDropdown);
+  }
 
   const speedSlider = document.getElementById("speed");
   if (speedSlider) {
@@ -93,6 +93,14 @@ function init() {
   const soundToggleButton = document.getElementById("soundToggle");
   if (soundToggleButton) {
     soundToggleButton.addEventListener("click", toggleSound);
+  }
+
+  const toggleBoxesButton = document.getElementById("toggleBoxes");
+
+  if (toggleBoxesButton) {
+    toggleBoxesButton.addEventListener("click", () =>
+      toggleBoxVisibility(leftBox, rightBox),
+    );
   }
 
   animate();
@@ -118,8 +126,8 @@ function animate() {
   renderer.render(scene, camera);
 }
 
-function changeColor(event) {
-  const color = event.target.dataset.color;
+function changeColorDropdown(event) {
+  const color = event.target.value;
   ball.material.color.setStyle(color);
 }
 
@@ -143,8 +151,13 @@ function toggleSound() {
   isSoundOn = !isSoundOn;
   const soundToggleButton = document.getElementById("soundToggle");
   if (soundToggleButton) {
-    soundToggleButton.textContent = isSoundOn ? "Sound On" : "Sound Off";
+    soundToggleButton.textContent = isSoundOn ? "Sound Off" : "Sound On";
   }
+}
+
+function toggleBoxVisibility(box1, box2) {
+  box1.visible = !box1.visible;
+  box2.visible = !box2.visible;
 }
 
 init();
